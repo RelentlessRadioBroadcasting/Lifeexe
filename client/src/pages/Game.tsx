@@ -151,6 +151,7 @@ export default function Game() {
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [gameSituations, setGameSituations] = useState<Situation[]>([]);
   const [usedIndices, setUsedIndices] = useState<Set<number>>(new Set());
+  const videoRef = useRef<HTMLVideoElement>(null);
   const { toast } = useToast();
 
   const clickTimestampsRef = useRef<number[]>([]);
@@ -313,16 +314,21 @@ export default function Game() {
     startGame();
   };
 
-  const skipIntro = () => {
-    setGameState("START");
-  };
-
   useEffect(() => {
-    if (gameState === "INTRO") {
-      const timer = setTimeout(() => {
+    if (gameState === "INTRO" && videoRef.current) {
+      // When video ends, transition to START
+      const handleVideoEnd = () => {
         setGameState("START");
-      }, 9000); // Auto advance after ~8 seconds + fade
-      return () => clearTimeout(timer);
+      };
+      
+      videoRef.current.addEventListener("ended", handleVideoEnd);
+      videoRef.current.play();
+      
+      return () => {
+        if (videoRef.current) {
+          videoRef.current.removeEventListener("ended", handleVideoEnd);
+        }
+      };
     }
   }, [gameState]);
 
@@ -337,6 +343,23 @@ export default function Game() {
     
     return parts.join(" | ");
   };
+
+  // Intro state shows full-screen video only
+  if (gameState === "INTRO") {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center relative overflow-hidden">
+        <video 
+          ref={videoRef}
+          src={introVideo} 
+          autoPlay 
+          muted 
+          className="w-full h-full object-cover"
+          preload="auto"
+        />
+        <div className="absolute inset-0 bg-black opacity-0" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-black text-green-500 font-mono p-4 flex flex-col items-center justify-center relative overflow-hidden select-none">
@@ -368,28 +391,6 @@ export default function Game() {
 
         {/* Main Interaction Area */}
         <div className="min-h-[280px] flex flex-col items-center justify-center space-y-4 text-center border-t-2 border-b-2 border-green-900/30 py-6">
-          {gameState === "INTRO" && (
-            <div className="space-y-4 w-full flex flex-col items-center">
-              <video 
-                src={introVideo} 
-                autoPlay 
-                muted 
-                className="w-full aspect-video object-cover pixelated"
-              />
-              <div className="w-full bg-black border-2 border-green-500 p-4 text-center space-y-2">
-                <p className="text-sm leading-relaxed">
-                  Warning: Game is fun, addictive but may cause existential experiences.
-                </p>
-              </div>
-              <Button 
-                onClick={skipIntro}
-                className="text-xs bg-transparent border border-green-500 text-green-500 hover:bg-green-500/20 rounded-none px-4"
-              >
-                SKIP INTRO
-              </Button>
-            </div>
-          )}
-
           {gameState === "START" && (
             <>
               <p className="text-xl">BEGIN SIMULATION?</p>
