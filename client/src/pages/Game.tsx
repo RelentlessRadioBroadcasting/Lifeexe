@@ -346,7 +346,7 @@ export default function Game() {
         {gameState === "INTRO" && (
           <div className="min-h-[400px] flex flex-col items-center justify-center space-y-4">
             <div className="w-full border-4 border-foreground bg-black p-4 relative overflow-hidden min-h-[150px] flex items-center justify-center">
-              <div className="scrolling-text text-foreground font-vt text-sm leading-relaxed text-center whitespace-normal">
+              <div className="scrolling-text text-white font-vt text-sm leading-relaxed text-center whitespace-normal">
                 WARNING
                 <br /><br />
                 THIS PROGRAM MAY CAUSE
