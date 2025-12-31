@@ -356,7 +356,12 @@ export default function Game() {
           className="w-full h-full object-cover"
           preload="auto"
         />
-        <div className="absolute inset-0 bg-black opacity-0" />
+        {/* 8-bit Dialogue Box Overlay */}
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 w-4/5 max-w-2xl dialogue-box">
+          <div className="scrolling-text text-lg md:text-2xl tracking-widest">
+            Game may cause Existential Experiences.
+          </div>
+        </div>
       </div>
     );
   }
