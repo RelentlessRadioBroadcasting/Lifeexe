@@ -4,9 +4,8 @@ import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { Heart, Brain, Sparkles, Skull, DollarSign } from "lucide-react";
 import { cn } from "@/lib/utils";
-import introVideo from "@assets/generated_videos/8-bit_zelda-style_intro_with_aristotle_sage.mp4";
 
-type GameState = "INTRO" | "START" | "PLAYING" | "GAME_OVER" | "VICTORY" | "RUSHED";
+type GameState = "START" | "PLAYING" | "GAME_OVER" | "VICTORY" | "RUSHED";
 
 type Stats = {
   health: number;
@@ -142,7 +141,7 @@ const ROUND_EVENTS = [
 ];
 
 export default function Game() {
-  const [gameState, setGameState] = useState<GameState>("INTRO");
+  const [gameState, setGameState] = useState<GameState>("START");
   const [stats, setStats] = useState<Stats>(INITIAL_STATS);
   const [turn, setTurn] = useState(0);
   const [clicks, setClicks] = useState(0);
@@ -151,7 +150,6 @@ export default function Game() {
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [gameSituations, setGameSituations] = useState<Situation[]>([]);
   const [usedIndices, setUsedIndices] = useState<Set<number>>(new Set());
-  const videoRef = useRef<HTMLVideoElement>(null);
   const { toast } = useToast();
 
   const clickTimestampsRef = useRef<number[]>([]);
@@ -314,24 +312,6 @@ export default function Game() {
     startGame();
   };
 
-  useEffect(() => {
-    if (gameState === "INTRO" && videoRef.current) {
-      // When video ends, transition to START
-      const handleVideoEnd = () => {
-        setGameState("START");
-      };
-      
-      videoRef.current.addEventListener("ended", handleVideoEnd);
-      videoRef.current.play();
-      
-      return () => {
-        if (videoRef.current) {
-          videoRef.current.removeEventListener("ended", handleVideoEnd);
-        }
-      };
-    }
-  }, [gameState]);
-
   const formatStatChange = () => {
     if (!statChanges) return "";
     
@@ -343,28 +323,6 @@ export default function Game() {
     
     return parts.join(" | ");
   };
-
-  // Intro state shows full-screen video only
-  if (gameState === "INTRO") {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center relative overflow-hidden">
-        <video 
-          ref={videoRef}
-          src={introVideo} 
-          autoPlay 
-          muted 
-          className="w-full h-full object-cover"
-          preload="auto"
-        />
-        {/* 8-bit Dialogue Box Overlay */}
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 w-4/5 max-w-2xl dialogue-box z-50">
-          <div className="scrolling-text text-lg md:text-2xl tracking-widest">
-            Game may cause Existential Experiences.
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-black text-green-500 font-mono p-4 flex flex-col items-center justify-center relative overflow-hidden select-none">
@@ -385,14 +343,12 @@ export default function Game() {
         </div>
 
         {/* Status Display */}
-        {gameState !== "INTRO" && (
-          <div className="grid grid-cols-2 gap-4">
-            <StatDisplay icon={Sparkles} label="HOPE" value={stats.hope} />
-            <StatDisplay icon={Brain} label="SANITY" value={stats.sanity} />
-            <StatDisplay icon={Heart} label="HEALTH" value={stats.health} />
-            <StatDisplay icon={DollarSign} label="FINANCIAL" value={stats.financial} />
-          </div>
-        )}
+        <div className="grid grid-cols-2 gap-4">
+          <StatDisplay icon={Sparkles} label="HOPE" value={stats.hope} />
+          <StatDisplay icon={Brain} label="SANITY" value={stats.sanity} />
+          <StatDisplay icon={Heart} label="HEALTH" value={stats.health} />
+          <StatDisplay icon={DollarSign} label="FINANCIAL" value={stats.financial} />
+        </div>
 
         {/* Main Interaction Area */}
         <div className="min-h-[280px] flex flex-col items-center justify-center space-y-4 text-center border-t-2 border-b-2 border-green-900/30 py-6">
