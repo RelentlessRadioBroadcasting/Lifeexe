@@ -152,10 +152,11 @@ export default function Game() {
   const [usedIndices, setUsedIndices] = useState<Set<number>>(new Set());
   const { toast } = useToast();
 
-  const lastClickTimeRef = useRef<number>(0);
+  const clickTimestampsRef = useRef<number[]>([]);
   const CLICKS_PER_TURN = 5;
   const MAX_TURNS = 10;
-  const NORMAL_CLICK_INTERVAL = 400;
+  const SPAM_WINDOW = 1000; // 1 second
+  const SPAM_THRESHOLD = 5; // 5 clicks in 1 second = spam
 
   const startGame = () => {
     const situations = generateGameSituations();
@@ -167,7 +168,7 @@ export default function Game() {
     setClicks(0);
     setMessage("Click to navigate through life.");
     setStatChanges(null);
-    lastClickTimeRef.current = Date.now();
+    clickTimestampsRef.current = [];
   };
 
   const getNextSituation = (): Situation => {
@@ -190,11 +191,17 @@ export default function Game() {
     if (gameState !== "PLAYING") return;
 
     const now = Date.now();
-    const timeSinceLastClick = now - lastClickTimeRef.current;
-    lastClickTimeRef.current = now;
-
-    // Check if clicking too fast
-    if (timeSinceLastClick < NORMAL_CLICK_INTERVAL) {
+    
+    // Add current click to timestamps
+    clickTimestampsRef.current.push(now);
+    
+    // Remove clicks older than 1 second
+    clickTimestampsRef.current = clickTimestampsRef.current.filter(
+      timestamp => now - timestamp < SPAM_WINDOW
+    );
+    
+    // Check if spamming (5 clicks in 1 second)
+    if (clickTimestampsRef.current.length >= SPAM_THRESHOLD) {
       setGameState("RUSHED");
       setButtonDisabled(true);
       setMessage("You rushed through life without thinking.");
