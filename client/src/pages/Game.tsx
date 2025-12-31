@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { Heart, Brain, Sparkles, Skull } from "lucide-react";
+import { Heart, Brain, Sparkles, Skull, DollarSign } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type GameState = "START" | "PLAYING" | "GAME_OVER" | "VICTORY" | "RUSHED";
@@ -11,14 +11,14 @@ type Stats = {
   health: number;
   sanity: number;
   hope: number;
-  humanity: number;
+  financial: number;
 };
 
 type StatChange = {
   health?: number;
   sanity?: number;
   hope?: number;
-  humanity?: number;
+  financial?: number;
 };
 
 type Situation = {
@@ -30,7 +30,7 @@ const INITIAL_STATS: Stats = {
   health: 50,
   sanity: 50,
   hope: 50,
-  humanity: 50,
+  financial: 50,
 };
 
 // Core 5 repeatable situations (can appear multiple times in a game)
@@ -78,7 +78,7 @@ const SITUATION_TEMPLATES = [
 
 // Function to generate random stat changes
 const generateRandomStatChange = (): StatChange => {
-  const stats: (keyof Stats)[] = ["health", "sanity", "hope", "humanity"];
+  const stats: (keyof Stats)[] = ["health", "sanity", "hope", "financial"];
   const change: StatChange = {};
   
   // Generate 1-3 stat changes
@@ -223,7 +223,7 @@ export default function Game() {
       if (situation.effect.hope) newStats.hope += situation.effect.hope;
       if (situation.effect.sanity) newStats.sanity += situation.effect.sanity;
       if (situation.effect.health) newStats.health += situation.effect.health;
-      if (situation.effect.humanity) newStats.humanity += situation.effect.humanity;
+      if (situation.effect.financial) newStats.financial += situation.effect.financial;
 
       // Clamp values
       (Object.keys(newStats) as (keyof Stats)[]).forEach(key => {
@@ -237,7 +237,7 @@ export default function Game() {
       if (newStats.health <= 0) { died = true; deathReason = "HEART STOPPED"; }
       else if (newStats.sanity <= 0) { died = true; deathReason = "MIND FRACTURED"; }
       else if (newStats.hope <= 0) { died = true; deathReason = "LOST ALL HOPE"; }
-      else if (newStats.humanity <= 0) { died = true; deathReason = "LOST YOURSELF"; }
+      else if (newStats.financial <= 0) { died = true; deathReason = "BANKRUPT"; }
 
       if (died) {
         setGameState("GAME_OVER");
@@ -280,7 +280,7 @@ export default function Game() {
         if (eventEffect.hope) newStats.hope += eventEffect.hope;
         if (eventEffect.sanity) newStats.sanity += eventEffect.sanity;
         if (eventEffect.health) newStats.health += eventEffect.health;
-        if (eventEffect.humanity) newStats.humanity += eventEffect.humanity;
+        if (eventEffect.financial) newStats.financial += eventEffect.financial;
 
         // Clamp values
         (Object.keys(newStats) as (keyof Stats)[]).forEach(key => {
@@ -294,7 +294,7 @@ export default function Game() {
         if (newStats.health <= 0) { died = true; deathReason = "HEART STOPPED"; }
         else if (newStats.sanity <= 0) { died = true; deathReason = "MIND FRACTURED"; }
         else if (newStats.hope <= 0) { died = true; deathReason = "LOST ALL HOPE"; }
-        else if (newStats.humanity <= 0) { died = true; deathReason = "LOST YOURSELF"; }
+        else if (newStats.financial <= 0) { died = true; deathReason = "BANKRUPT"; }
 
         if (died) {
           setGameState("GAME_OVER");
@@ -319,7 +319,7 @@ export default function Game() {
     if (statChanges.health) parts.push(`${statChanges.health > 0 ? "+" : ""}${statChanges.health} Health`);
     if (statChanges.sanity) parts.push(`${statChanges.sanity > 0 ? "+" : ""}${statChanges.sanity} Sanity`);
     if (statChanges.hope) parts.push(`${statChanges.hope > 0 ? "+" : ""}${statChanges.hope} Hope`);
-    if (statChanges.humanity) parts.push(`${statChanges.humanity > 0 ? "+" : ""}${statChanges.humanity} Humanity`);
+    if (statChanges.financial) parts.push(`${statChanges.financial > 0 ? "+" : ""}${statChanges.financial} Financial`);
     
     return parts.join(" | ");
   };
@@ -347,7 +347,7 @@ export default function Game() {
           <StatDisplay icon={Sparkles} label="HOPE" value={stats.hope} />
           <StatDisplay icon={Brain} label="SANITY" value={stats.sanity} />
           <StatDisplay icon={Heart} label="HEALTH" value={stats.health} />
-          <StatDisplay icon={Sparkles} label="HUMANITY" value={stats.humanity} />
+          <StatDisplay icon={DollarSign} label="FINANCIAL" value={stats.financial} />
         </div>
 
         {/* Main Interaction Area */}
