@@ -4,8 +4,9 @@ import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { Heart, Brain, Sparkles, Skull, DollarSign } from "lucide-react";
 import { cn } from "@/lib/utils";
+import introVideo from "@assets/generated_videos/8-bit_zelda-style_intro_with_aristotle_sage.mp4";
 
-type GameState = "START" | "PLAYING" | "GAME_OVER" | "VICTORY" | "RUSHED";
+type GameState = "INTRO" | "START" | "PLAYING" | "GAME_OVER" | "VICTORY" | "RUSHED";
 
 type Stats = {
   health: number;
@@ -141,7 +142,7 @@ const ROUND_EVENTS = [
 ];
 
 export default function Game() {
-  const [gameState, setGameState] = useState<GameState>("START");
+  const [gameState, setGameState] = useState<GameState>("INTRO");
   const [stats, setStats] = useState<Stats>(INITIAL_STATS);
   const [turn, setTurn] = useState(0);
   const [clicks, setClicks] = useState(0);
@@ -312,6 +313,19 @@ export default function Game() {
     startGame();
   };
 
+  const skipIntro = () => {
+    setGameState("START");
+  };
+
+  useEffect(() => {
+    if (gameState === "INTRO") {
+      const timer = setTimeout(() => {
+        setGameState("START");
+      }, 9000); // Auto advance after ~8 seconds + fade
+      return () => clearTimeout(timer);
+    }
+  }, [gameState]);
+
   const formatStatChange = () => {
     if (!statChanges) return "";
     
@@ -343,15 +357,39 @@ export default function Game() {
         </div>
 
         {/* Status Display */}
-        <div className="grid grid-cols-2 gap-4">
-          <StatDisplay icon={Sparkles} label="HOPE" value={stats.hope} />
-          <StatDisplay icon={Brain} label="SANITY" value={stats.sanity} />
-          <StatDisplay icon={Heart} label="HEALTH" value={stats.health} />
-          <StatDisplay icon={DollarSign} label="FINANCIAL" value={stats.financial} />
-        </div>
+        {gameState !== "INTRO" && (
+          <div className="grid grid-cols-2 gap-4">
+            <StatDisplay icon={Sparkles} label="HOPE" value={stats.hope} />
+            <StatDisplay icon={Brain} label="SANITY" value={stats.sanity} />
+            <StatDisplay icon={Heart} label="HEALTH" value={stats.health} />
+            <StatDisplay icon={DollarSign} label="FINANCIAL" value={stats.financial} />
+          </div>
+        )}
 
         {/* Main Interaction Area */}
         <div className="min-h-[280px] flex flex-col items-center justify-center space-y-4 text-center border-t-2 border-b-2 border-green-900/30 py-6">
+          {gameState === "INTRO" && (
+            <div className="space-y-4 w-full flex flex-col items-center">
+              <video 
+                src={introVideo} 
+                autoPlay 
+                muted 
+                className="w-full aspect-video object-cover pixelated"
+              />
+              <div className="w-full bg-black border-2 border-green-500 p-4 text-center space-y-2">
+                <p className="text-sm leading-relaxed">
+                  Warning: Game is fun, addictive but may cause existential experiences.
+                </p>
+              </div>
+              <Button 
+                onClick={skipIntro}
+                className="text-xs bg-transparent border border-green-500 text-green-500 hover:bg-green-500/20 rounded-none px-4"
+              >
+                SKIP INTRO
+              </Button>
+            </div>
+          )}
+
           {gameState === "START" && (
             <>
               <p className="text-xl">BEGIN SIMULATION?</p>
