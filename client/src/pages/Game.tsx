@@ -335,18 +335,18 @@ export default function Game() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-green-500 font-mono p-4 flex flex-col items-center justify-center relative overflow-hidden select-none">
+    <div className="min-h-screen bg-black text-foreground font-mono p-4 flex flex-col items-center justify-center relative overflow-hidden select-none">
       {/* CRT Effects */}
       <div className="crt-overlay absolute inset-0 z-50 pointer-events-none opacity-20" />
       <div className="scanline absolute inset-0 z-50 pointer-events-none opacity-10" />
 
-      <div className="max-w-md w-full z-10 space-y-8 border-4 border-green-900/50 p-6 bg-black/80 shadow-[0_0_50px_rgba(34,197,94,0.1)]">
+      <div className="max-w-md w-full z-10 space-y-8 border-4 border-muted p-6 bg-black/80 shadow-[0_0_50px_rgba(102,102,102,0.1)]">
         
         {/* INTRO SCREEN */}
         {gameState === "INTRO" && (
           <div className="min-h-[400px] flex flex-col items-center justify-center space-y-4">
-            <div className="w-full border-4 border-green-500 bg-black p-4 relative overflow-hidden min-h-[150px] flex items-center justify-center">
-              <div className="scrolling-text text-white font-vt text-sm leading-relaxed text-center whitespace-normal">
+            <div className="w-full border-4 border-foreground bg-black p-4 relative overflow-hidden min-h-[150px] flex items-center justify-center">
+              <div className="scrolling-text text-foreground font-vt text-sm leading-relaxed text-center whitespace-normal">
                 WARNING
                 <br /><br />
                 THIS PROGRAM MAY CAUSE
@@ -382,14 +382,14 @@ export default function Game() {
         </div>
 
         {/* Main Interaction Area */}
-        <div className="min-h-[280px] flex flex-col items-center justify-center space-y-4 text-center border-t-2 border-b-2 border-green-900/30 py-6">
+        <div className="min-h-[280px] flex flex-col items-center justify-center space-y-4 text-center border-t-2 border-b-2 border-muted py-6">
           {gameState === "START" && (
             <>
               <p className="text-xl">BEGIN SIMULATION?</p>
-              <p className="text-sm text-green-700">Survive 10 rounds with 5 clicks per round.</p>
+              <p className="text-sm text-muted-foreground">Survive 10 rounds with 5 clicks per round.</p>
               <Button 
                 onClick={startGame}
-                className="bg-green-700 text-black hover:bg-green-600 font-bold px-8 py-6 text-xl rounded-none animate-bounce"
+                className="bg-primary text-black hover:bg-primary/90 font-bold px-8 py-6 text-xl rounded-none animate-bounce"
               >
                 START LIFE.EXE
               </Button>
@@ -401,23 +401,23 @@ export default function Game() {
               <p className="text-lg min-h-[4rem]">{message}</p>
               
               {statChanges && (
-                <div className="w-full p-2 bg-green-900/20 border border-green-700/50 text-xs">
+                <div className="w-full p-2 bg-muted border border-muted text-xs">
                   {formatStatChange()}
                 </div>
               )}
 
               <div className="w-full max-w-[200px] space-y-2">
-                <div className="flex justify-between text-xs text-green-700">
+                <div className="flex justify-between text-xs text-muted-foreground">
                   <span>CLICKS THIS ROUND</span>
                   <span>{clicks}/{CLICKS_PER_TURN}</span>
                 </div>
-                <Progress value={(clicks / CLICKS_PER_TURN) * 100} className="h-2 bg-green-900/30" indicatorClassName="bg-green-500" />
+                <Progress value={(clicks / CLICKS_PER_TURN) * 100} className="h-2 bg-muted" indicatorClassName="bg-foreground" />
               </div>
               
               <Button 
                 onClick={handleSurviveClick}
                 disabled={buttonDisabled}
-                className="w-full py-8 text-xl bg-transparent border-2 border-green-500 text-green-500 hover:bg-green-500 hover:text-black rounded-none transition-all active:scale-95 disabled:opacity-50"
+                className="w-full py-8 text-xl bg-transparent border-2 border-foreground text-foreground hover:bg-foreground hover:text-black rounded-none transition-all active:scale-95 disabled:opacity-50"
               >
                 CLICK TO SURVIVE
               </Button>
@@ -428,7 +428,7 @@ export default function Game() {
             <div className="space-y-4">
               <Skull className="w-16 h-16 mx-auto text-red-500 animate-pulse" />
               <div className="text-red-500 font-bold text-2xl">SIMULATION FAILED</div>
-              <p className="text-green-700">{message}</p>
+              <p className="text-muted-foreground">{message}</p>
               <Button 
                 onClick={handleRestart}
                 variant="destructive"
@@ -443,7 +443,7 @@ export default function Game() {
             <div className="space-y-4">
               <Skull className="w-16 h-16 mx-auto text-yellow-500 animate-pulse" />
               <div className="text-yellow-500 font-bold text-2xl">LIFE SKIPPED</div>
-              <p className="text-green-700">{message}</p>
+              <p className="text-muted-foreground">{message}</p>
               <Button 
                 onClick={handleRestart}
                 className="bg-red-600 text-black hover:bg-red-500 rounded-none px-8 font-bold"
@@ -457,7 +457,7 @@ export default function Game() {
             <div className="space-y-4">
               <Sparkles className="w-16 h-16 mx-auto text-yellow-500 animate-spin" />
               <div className="text-yellow-500 font-bold text-2xl">SURVIVAL COMPLETE</div>
-              <p className="text-green-700">{message}</p>
+              <p className="text-muted-foreground">{message}</p>
               <Button 
                 onClick={handleRestart}
                 className="bg-yellow-500 text-black hover:bg-yellow-400 rounded-none px-8"
@@ -469,7 +469,7 @@ export default function Game() {
         </div>
 
         {/* Footer */}
-        <div className="text-center text-xs text-green-900/60">
+        <div className="text-center text-xs text-muted-foreground/60">
           © 2025 LIFE SIMULATION CORP
         </div>
       </div>
@@ -479,14 +479,14 @@ export default function Game() {
 
 function StatDisplay({ icon: Icon, label, value }: { icon: any, label: string, value: number }) {
   return (
-    <div className="flex items-center gap-2 p-2 border border-green-900/30 bg-green-900/5">
+    <div className="flex items-center gap-2 p-2 border border-muted bg-muted/20">
       <Icon className="w-4 h-4" />
       <div className="flex-1 space-y-1">
         <div className="flex justify-between text-xs">
           <span>{label}</span>
           <span>{value}</span>
         </div>
-        <Progress value={value} className="h-1.5 bg-green-900/50" indicatorClassName={value < 20 ? "bg-red-500" : "bg-green-500"} />
+        <Progress value={value} className="h-1.5 bg-muted" indicatorClassName={value < 20 ? "bg-red-500" : "bg-foreground"} />
       </div>
     </div>
   );

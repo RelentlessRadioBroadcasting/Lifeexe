@@ -4,33 +4,39 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --color-background: hsl(0 0% 5%); /* Almost black */
-  --color-foreground: hsl(120 100% 50%); /* Terminal Green */
+  --color-background: hsl(0 0% 5%);
+  /* Almost black */
+  --color-foreground: hsl(153, 26%, 33%);
+  /* Terminal Green */
 
   --color-card: hsl(0 0% 10%);
-  --color-card-foreground: hsl(120 100% 50%);
+  --color-card-foreground: hsl(153, 26%, 33%);
 
   --color-popover: hsl(0 0% 8%);
-  --color-popover-foreground: hsl(120 100% 50%);
+  --color-popover-foreground: hsl(153, 26%, 33%);
 
-  --color-primary: hsl(120 100% 50%); /* Neon Green */
+  --color-primary: hsl(153, 26%, 33%);
+  /* Muted Green */
   --color-primary-foreground: hsl(0 0% 0%);
 
-  --color-secondary: hsl(300 100% 50%); /* Magenta */
+  --color-secondary: hsl(300 100% 50%);
+  /* Magenta */
   --color-secondary-foreground: hsl(0 0% 0%);
 
   --color-muted: hsl(0 0% 20%);
-  --color-muted-foreground: hsl(120 60% 50%);
+  --color-muted-foreground: hsl(153, 26%, 33%);
 
-  --color-accent: hsl(60 100% 50%); /* Yellow */
+  --color-accent: hsl(60 100% 50%);
+  /* Yellow */
   --color-accent-foreground: hsl(0 0% 0%);
 
-  --color-destructive: hsl(0 100% 50%); /* Red */
+  --color-destructive: hsl(0 100% 50%);
+  /* Red */
   --color-destructive-foreground: hsl(0 0% 0%);
 
-  --color-border: hsl(120 100% 25%);
-  --color-input: hsl(120 100% 20%);
-  --color-ring: hsl(120 100% 50%);
+  --color-border: hsl(153, 26%, 33%);
+  --color-input: hsl(153, 26%, 33%);
+  --color-ring: hsl(153, 26%, 33%);
 
   --font-press: "Press Start 2P", display;
   --font-vt: "VT323", monospace;
@@ -44,31 +50,33 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply font-vt bg-background text-foreground antialiased selection:bg-primary selection:text-black;
     image-rendering: pixelated;
   }
-  
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-press uppercase tracking-widest;
   }
 }
 
 @layer utilities {
   .crt-overlay {
-    background: linear-gradient(
-      rgba(18, 16, 16, 0) 50%, 
-      rgba(0, 0, 0, 0.25) 50%
-    ), linear-gradient(
-      90deg, 
-      rgba(255, 0, 0, 0.06), 
-      rgba(0, 255, 0, 0.02), 
-      rgba(0, 0, 255, 0.06)
-    );
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%,
+        rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg,
+        rgba(255, 0, 0, 0.06),
+        rgba(153, 66, 84, 0.02),
+        rgba(0, 0, 255, 0.06));
     background-size: 100% 2px, 3px 100%;
     pointer-events: none;
   }
-  
+
   .scanline {
     width: 100%;
     height: 10px;
@@ -83,16 +91,21 @@
   }
 
   @keyframes scanline {
-    0% { top: -10%; }
-    100% { top: 110%; }
+    0% {
+      top: -10%;
+    }
+
+    100% {
+      top: 110%;
+    }
   }
 
   .text-shadow-retro {
-    text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
   }
-  
+
   .box-shadow-retro {
-    box-shadow: 4px 4px 0px 0px rgba(0, 255, 0, 0.2);
+    box-shadow: 4px 4px 0px 0px rgb(79, 92, 69, 0.2);
   }
 
   .scrolling-text {
@@ -105,9 +118,11 @@
       transform: translateY(100px);
       letter-spacing: 5px;
     }
+
     50% {
       opacity: 1;
     }
+
     100% {
       opacity: 1;
       transform: translateY(0);
