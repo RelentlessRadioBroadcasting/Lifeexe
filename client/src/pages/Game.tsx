@@ -86,9 +86,14 @@ const generateRandomStatChange = (): StatChange => {
   const selectedStats = stats.sort(() => Math.random() - 0.5).slice(0, numChanges);
   
   selectedStats.forEach(stat => {
-    const intensity = Math.floor(Math.random() * 20) + 5; // 5-25
-    const isPositive = Math.random() > 0.4; // 60% chance positive
-    change[stat] = isPositive ? intensity : -intensity;
+    const isPositive = Math.random() > 0.25; // 75% chance positive
+    if (isPositive) {
+      // Positive: 3-8 points
+      change[stat] = Math.floor(Math.random() * 6) + 3;
+    } else {
+      // Negative: -2 to -8 points
+      change[stat] = -(Math.floor(Math.random() * 7) + 2);
+    }
   });
   
   return change;
