@@ -140,6 +140,8 @@ const ROUND_EVENTS = [
   "Fatigue is setting in."
 ];
 
+import { PaymentModal } from "@/components/payment-modal";
+
 export default function Game() {
   const [gameState, setGameState] = useState<GameState>("INTRO");
   const [stats, setStats] = useState<Stats>(INITIAL_STATS);
@@ -150,6 +152,7 @@ export default function Game() {
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [gameSituations, setGameSituations] = useState<Situation[]>([]);
   const [usedIndices, setUsedIndices] = useState<Set<number>>(new Set());
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const { toast } = useToast();
 
   // Auto-transition from intro to start after animation
@@ -322,6 +325,17 @@ export default function Game() {
     startGame();
   };
 
+  const handlePaymentSuccess = () => {
+    setStats(prev => {
+      const newStats = { ...prev, financial: Math.min(100, prev.financial + 50) };
+      return newStats;
+    });
+    toast({
+      title: "Funds Added",
+      description: "Financial stability has been temporarily restored.",
+    });
+  };
+
   const formatStatChange = () => {
     if (!statChanges) return "";
     
@@ -378,8 +392,19 @@ export default function Game() {
           <StatDisplay icon={Sparkles} label="HOPE" value={stats.hope} />
           <StatDisplay icon={Brain} label="SANITY" value={stats.sanity} />
           <StatDisplay icon={Heart} label="HEALTH" value={stats.health} />
-          <StatDisplay icon={DollarSign} label="FINANCIAL" value={stats.financial} />
+          <StatDisplay 
+            icon={DollarSign} 
+            label="FINANCIAL" 
+            value={stats.financial} 
+            onAdd={() => setShowPaymentModal(true)}
+          />
         </div>
+
+        <PaymentModal 
+          open={showPaymentModal} 
+          onOpenChange={setShowPaymentModal} 
+          onSuccess={handlePaymentSuccess} 
+        />
 
         {/* Main Interaction Area */}
         <div className="min-h-[280px] flex flex-col items-center justify-center space-y-4 text-center border-t-2 border-b-2 border-muted py-6">
@@ -477,14 +502,26 @@ export default function Game() {
   );
 }
 
-function StatDisplay({ icon: Icon, label, value }: { icon: any, label: string, value: number }) {
+function StatDisplay({ icon: Icon, label, value, onAdd }: { icon: any, label: string, value: number, onAdd?: () => void }) {
   return (
-    <div className="flex items-center gap-2 p-2 border border-muted bg-muted/20">
+    <div className="flex items-center gap-2 p-2 border border-muted bg-muted/20 relative group">
       <Icon className="w-4 h-4" />
       <div className="flex-1 space-y-1">
-        <div className="flex justify-between text-xs">
+        <div className="flex justify-between text-xs items-center">
           <span>{label}</span>
-          <span>{value}</span>
+          <div className="flex items-center gap-2">
+            <span>{value}</span>
+            {onAdd && (
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-4 w-4 hover:bg-green-500/20 hover:text-green-500 p-0"
+                onClick={onAdd}
+              >
+                <div className="text-[10px]">+</div>
+              </Button>
+            )}
+          </div>
         </div>
         <Progress value={value} className="h-1.5 bg-muted" indicatorClassName={value < 20 ? "bg-red-500" : "bg-foreground"} />
       </div>
