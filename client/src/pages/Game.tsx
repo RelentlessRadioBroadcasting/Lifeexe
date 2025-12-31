@@ -5,7 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Heart, Brain, Sparkles, Skull, DollarSign } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type GameState = "START" | "PLAYING" | "GAME_OVER" | "VICTORY" | "RUSHED";
+type GameState = "INTRO" | "START" | "PLAYING" | "GAME_OVER" | "VICTORY" | "RUSHED";
 
 type Stats = {
   health: number;
@@ -141,7 +141,7 @@ const ROUND_EVENTS = [
 ];
 
 export default function Game() {
-  const [gameState, setGameState] = useState<GameState>("START");
+  const [gameState, setGameState] = useState<GameState>("INTRO");
   const [stats, setStats] = useState<Stats>(INITIAL_STATS);
   const [turn, setTurn] = useState(0);
   const [clicks, setClicks] = useState(0);
@@ -151,6 +151,16 @@ export default function Game() {
   const [gameSituations, setGameSituations] = useState<Situation[]>([]);
   const [usedIndices, setUsedIndices] = useState<Set<number>>(new Set());
   const { toast } = useToast();
+
+  // Auto-transition from intro to start after animation
+  useEffect(() => {
+    if (gameState === "INTRO") {
+      const timer = setTimeout(() => {
+        setGameState("START");
+      }, 4000); // 4 seconds for the scrolling animation
+      return () => clearTimeout(timer);
+    }
+  }, [gameState]);
 
   const clickTimestampsRef = useRef<number[]>([]);
   const CLICKS_PER_TURN = 5;
@@ -332,15 +342,36 @@ export default function Game() {
 
       <div className="max-w-md w-full z-10 space-y-8 border-4 border-green-900/50 p-6 bg-black/80 shadow-[0_0_50px_rgba(34,197,94,0.1)]">
         
-        {/* Header */}
-        <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold tracking-tighter animate-pulse">LIFE.EXE</h1>
-          {gameState === "PLAYING" && (
-            <div className="text-sm text-green-700">
-              ROUND {turn}/{MAX_TURNS}
+        {/* INTRO SCREEN */}
+        {gameState === "INTRO" && (
+          <div className="min-h-[400px] flex flex-col items-center justify-center space-y-4">
+            <div className="w-full border-4 border-green-500 bg-black p-4 relative overflow-hidden min-h-[150px] flex items-center justify-center">
+              <div className="scrolling-text text-white font-vt text-sm leading-relaxed text-center whitespace-normal">
+                WARNING
+                <br /><br />
+                THIS PROGRAM MAY CAUSE
+                <br />
+                EXISTENTIAL
+                <br />
+                EXPERIENCES
+                <br /><br />
+                PROCEED AT YOUR OWN RISK
+              </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
+
+        {/* Header */}
+        {gameState !== "INTRO" && (
+          <div className="text-center space-y-2">
+            <h1 className="text-4xl font-bold tracking-tighter animate-pulse">LIFE.EXE</h1>
+            {gameState === "PLAYING" && (
+              <div className="text-sm text-green-700">
+                ROUND {turn}/{MAX_TURNS}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Status Display */}
         <div className="grid grid-cols-2 gap-4">

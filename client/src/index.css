@@ -94,4 +94,24 @@
   .box-shadow-retro {
     box-shadow: 4px 4px 0px 0px rgba(0, 255, 0, 0.2);
   }
+
+  .scrolling-text {
+    animation: scrollIn 3.5s ease-in-out forwards;
+  }
+
+  @keyframes scrollIn {
+    0% {
+      opacity: 0;
+      transform: translateY(100px);
+      letter-spacing: 5px;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+      letter-spacing: 2px;
+    }
+  }
 }
