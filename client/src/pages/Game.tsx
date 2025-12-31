@@ -1,59 +1,74 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { Heart, Brain, DollarSign, Sparkles, Skull } from "lucide-react";
+import { Heart, Brain, Sparkles, Skull } from "lucide-react";
 import { cn } from "@/lib/utils";
-import reaperImg from "@assets/generated_images/8-bit_grim_reaper_pixel_art.png";
 
-type GameState = "START" | "PLAYING" | "GAME_OVER" | "VICTORY";
+type GameState = "START" | "PLAYING" | "GAME_OVER" | "VICTORY" | "RUSHED";
 
 type Stats = {
-  hope: number;
-  sanity: number;
   health: number;
-  funds: number;
+  sanity: number;
+  hope: number;
+  humanity: number;
 };
 
 const INITIAL_STATS: Stats = {
-  hope: 50,
-  sanity: 50,
   health: 50,
-  funds: 50,
+  sanity: 50,
+  hope: 50,
+  humanity: 50,
 };
 
 const EVENTS = [
   {
-    text: "You found a dollar on the street.",
-    effect: { funds: 5, hope: 2 }
+    text: "You found a quiet moment to yourself.",
+    effect: { sanity: 8, hope: 5 }
   },
   {
-    text: "Your boss yelled at you.",
-    effect: { sanity: -10, funds: 10 } // Got paid but sad
+    text: "Your boss criticized your work publicly.",
+    effect: { sanity: -12, humanity: -5 }
   },
   {
-    text: "You ate a stale sandwich.",
-    effect: { health: -5, funds: 5 } // Saved money
+    text: "You helped a stranger carry groceries.",
+    effect: { humanity: 10, hope: 5 }
   },
   {
-    text: "Existential dread sets in.",
-    effect: { sanity: -15, hope: -5 }
+    text: "Sleep deprivation catches up with you.",
+    effect: { health: -15, sanity: -10 }
   },
   {
-    text: "You saw a cute dog.",
-    effect: { sanity: 10, hope: 5 }
+    text: "You laughed at something genuinely funny.",
+    effect: { sanity: 10, hope: 8 }
   },
   {
-    text: "Unexpected medical bill.",
-    effect: { funds: -20, sanity: -10 }
+    text: "Your responsibilities feel overwhelming.",
+    effect: { hope: -15, health: -8 }
   },
   {
-    text: "A stranger smiled at you.",
-    effect: { hope: 10 }
+    text: "A friend checked in on you.",
+    effect: { humanity: 8, sanity: 10 }
   },
   {
-    text: "You worked overtime.",
-    effect: { funds: 20, health: -10, sanity: -10 }
+    text: "You made a small mistake at work.",
+    effect: { sanity: -8, hope: -5 }
+  },
+  {
+    text: "You took a walk in fresh air.",
+    effect: { health: 10, sanity: 8 }
+  },
+  {
+    text: "You failed to meet your own expectations.",
+    effect: { hope: -10, humanity: -8 }
+  },
+  {
+    text: "You connected deeply with someone.",
+    effect: { humanity: 12, sanity: 8 }
+  },
+  {
+    text: "Financial stress weighs on you.",
+    effect: { health: -10, hope: -10 }
   }
 ];
 
@@ -63,36 +78,40 @@ export default function Game() {
   const [turn, setTurn] = useState(0);
   const [clicks, setClicks] = useState(0);
   const [message, setMessage] = useState("Initializing LIFE.EXE...");
+  const [buttonDisabled, setButtonDisabled] = useState(false);
   const { toast } = useToast();
 
+  const lastClickTimeRef = useRef<number>(0);
   const CLICKS_PER_TURN = 5;
   const MAX_TURNS = 10;
+  const NORMAL_CLICK_INTERVAL = 400; // milliseconds - normal pace
 
   const startGame = () => {
     setGameState("PLAYING");
     setStats(INITIAL_STATS);
     setTurn(0);
     setClicks(0);
-    setMessage("SURVIVE 10 TURNS");
+    setMessage("Click to proceed through life.");
+    lastClickTimeRef.current = Date.now();
   };
 
   const handleSurviveClick = () => {
     if (gameState !== "PLAYING") return;
 
+    const now = Date.now();
+    const timeSinceLastClick = now - lastClickTimeRef.current;
+    lastClickTimeRef.current = now;
+
+    // Check if clicking too fast (rushing through life)
+    if (timeSinceLastClick < NORMAL_CLICK_INTERVAL) {
+      setGameState("RUSHED");
+      setButtonDisabled(true);
+      setMessage("You rushed through life without thinking.");
+      return;
+    }
+
     const newClicks = clicks + 1;
     setClicks(newClicks);
-
-    // Random small stat fluctuation on clicks
-    if (Math.random() > 0.7) {
-      const statKeys: (keyof Stats)[] = ["hope", "sanity", "health", "funds"];
-      const randomStat = statKeys[Math.floor(Math.random() * statKeys.length)];
-      const change = Math.random() > 0.5 ? 1 : -1;
-      
-      setStats(prev => ({
-        ...prev,
-        [randomStat]: Math.max(0, Math.min(100, prev[randomStat] + change))
-      }));
-    }
 
     if (newClicks >= CLICKS_PER_TURN) {
       advanceTurn();
@@ -117,7 +136,7 @@ export default function Game() {
       if (event.effect.hope) newStats.hope += event.effect.hope;
       if (event.effect.sanity) newStats.sanity += event.effect.sanity;
       if (event.effect.health) newStats.health += event.effect.health;
-      if (event.effect.funds) newStats.funds += event.effect.funds;
+      if (event.effect.humanity) newStats.humanity += event.effect.humanity;
 
       // Clamp values
       (Object.keys(newStats) as (keyof Stats)[]).forEach(key => {
@@ -125,10 +144,10 @@ export default function Game() {
       });
 
       // Check death conditions
-      if (newStats.health <= 0) { died = true; deathReason = "CRITICAL ORGAN FAILURE"; }
-      else if (newStats.sanity <= 0) { died = true; deathReason = "PSYCHOTIC BREAK"; }
-      else if (newStats.funds <= 0) { died = true; deathReason = "STARVATION (NO FUNDS)"; }
-      else if (newStats.hope <= 0) { died = true; deathReason = "GAVE UP"; }
+      if (newStats.health <= 0) { died = true; deathReason = "HEART STOPPED"; }
+      else if (newStats.sanity <= 0) { died = true; deathReason = "MIND FRACTURED"; }
+      else if (newStats.hope <= 0) { died = true; deathReason = "LOST ALL HOPE"; }
+      else if (newStats.humanity <= 0) { died = true; deathReason = "LOST YOURSELF"; }
 
       if (died) {
         setGameState("GAME_OVER");
@@ -142,8 +161,13 @@ export default function Game() {
 
     if (newTurn >= MAX_TURNS) {
       setGameState("VICTORY");
-      setMessage("YOU SURVIVED LIFE.EXE");
+      setMessage("You survived all 10 rounds of life.");
     }
+  };
+
+  const handleRestart = () => {
+    setButtonDisabled(false);
+    startGame();
   };
 
   return (
@@ -159,7 +183,7 @@ export default function Game() {
           <h1 className="text-4xl font-bold tracking-tighter animate-pulse">LIFE.EXE</h1>
           {gameState === "PLAYING" && (
             <div className="text-sm text-green-700">
-              SURVIVAL PROGRESS: {turn}/{MAX_TURNS}
+              ROUND {turn}/{MAX_TURNS}
             </div>
           )}
         </div>
@@ -169,17 +193,15 @@ export default function Game() {
           <StatDisplay icon={Sparkles} label="HOPE" value={stats.hope} />
           <StatDisplay icon={Brain} label="SANITY" value={stats.sanity} />
           <StatDisplay icon={Heart} label="HEALTH" value={stats.health} />
-          <StatDisplay icon={DollarSign} label="FUNDS" value={stats.funds} />
+          <StatDisplay icon={Sparkles} label="HUMANITY" value={stats.humanity} />
         </div>
 
         {/* Main Interaction Area */}
-        <div className="min-h-[160px] flex flex-col items-center justify-center space-y-4 text-center border-t-2 border-b-2 border-green-900/30 py-6">
+        <div className="min-h-[200px] flex flex-col items-center justify-center space-y-4 text-center border-t-2 border-b-2 border-green-900/30 py-6">
           {gameState === "START" && (
             <>
-               <div className="w-32 h-32 mb-4 relative grayscale hover:grayscale-0 transition-all duration-500">
-                <img src={reaperImg} alt="Reaper" className="w-full h-full object-contain pixelated" />
-              </div>
-              <p className="text-xl">INITIALIZE SIMULATION?</p>
+              <p className="text-xl">BEGIN SIMULATION?</p>
+              <p className="text-sm text-green-700">Survive 10 rounds with 5 clicks per round.</p>
               <Button 
                 onClick={startGame}
                 className="bg-green-700 text-black hover:bg-green-600 font-bold px-8 py-6 text-xl rounded-none animate-bounce"
@@ -194,7 +216,7 @@ export default function Game() {
               <p className="text-lg min-h-[3rem]">{message}</p>
               <div className="w-full max-w-[200px] space-y-2">
                 <div className="flex justify-between text-xs text-green-700">
-                  <span>CLICKS TO EVENT</span>
+                  <span>CLICKS THIS ROUND</span>
                   <span>{clicks}/{CLICKS_PER_TURN}</span>
                 </div>
                 <Progress value={(clicks / CLICKS_PER_TURN) * 100} className="h-2 bg-green-900/30" indicatorClassName="bg-green-500" />
@@ -202,7 +224,8 @@ export default function Game() {
               
               <Button 
                 onClick={handleSurviveClick}
-                className="w-full py-8 text-xl bg-transparent border-2 border-green-500 text-green-500 hover:bg-green-500 hover:text-black rounded-none transition-all active:scale-95"
+                disabled={buttonDisabled}
+                className="w-full py-8 text-xl bg-transparent border-2 border-green-500 text-green-500 hover:bg-green-500 hover:text-black rounded-none transition-all active:scale-95 disabled:opacity-50"
               >
                 CLICK TO SURVIVE
               </Button>
@@ -215,7 +238,7 @@ export default function Game() {
               <div className="text-red-500 font-bold text-2xl">SIMULATION FAILED</div>
               <p className="text-green-700">{message}</p>
               <Button 
-                onClick={startGame}
+                onClick={handleRestart}
                 variant="destructive"
                 className="rounded-none px-8"
               >
@@ -224,13 +247,27 @@ export default function Game() {
             </div>
           )}
 
+          {gameState === "RUSHED" && (
+            <div className="space-y-4">
+              <Skull className="w-16 h-16 mx-auto text-yellow-500 animate-pulse" />
+              <div className="text-yellow-500 font-bold text-2xl">LIFE SKIPPED</div>
+              <p className="text-green-700">{message}</p>
+              <Button 
+                onClick={handleRestart}
+                className="bg-red-600 text-black hover:bg-red-500 rounded-none px-8 font-bold"
+              >
+                Don't Rush Through Life
+              </Button>
+            </div>
+          )}
+
           {gameState === "VICTORY" && (
             <div className="space-y-4">
-              <Sparkles className="w-16 h-16 mx-auto text-yellow-500 animate-spin-slow" />
+              <Sparkles className="w-16 h-16 mx-auto text-yellow-500 animate-spin" />
               <div className="text-yellow-500 font-bold text-2xl">SURVIVAL COMPLETE</div>
-              <p className="text-green-700">You have delayed the inevitable.</p>
+              <p className="text-green-700">{message}</p>
               <Button 
-                onClick={startGame}
+                onClick={handleRestart}
                 className="bg-yellow-500 text-black hover:bg-yellow-400 rounded-none px-8"
               >
                 PLAY AGAIN
