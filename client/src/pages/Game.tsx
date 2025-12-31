@@ -157,7 +157,7 @@ export default function Game() {
     if (gameState === "INTRO") {
       const timer = setTimeout(() => {
         setGameState("START");
-      }, 4000); // 4 seconds for the scrolling animation
+      }, 7000); // 7 seconds for the scrolling animation
       return () => clearTimeout(timer);
     }
   }, [gameState]);

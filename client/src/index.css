@@ -96,7 +96,7 @@
   }
 
   .scrolling-text {
-    animation: scrollIn 3.5s ease-in-out forwards;
+    animation: scrollIn 6.5s ease-in-out forwards;
   }
 
   @keyframes scrollIn {
