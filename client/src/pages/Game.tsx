@@ -26,11 +26,6 @@ type Situation = {
   effect: StatChange;
 };
 
-type EventScene = {
-  text: string;
-  effect: StatChange;
-};
-
 const INITIAL_STATS: Stats = {
   health: 50,
   sanity: 50,
@@ -38,114 +33,106 @@ const INITIAL_STATS: Stats = {
   humanity: 50,
 };
 
-const SITUATIONS: Situation[] = [
-  {
-    text: "You get a notification that you have a meeting in 5 minutes.",
-    effect: { sanity: -5, hope: -2 }
-  },
-  {
-    text: "Your friend texts you a meme that actually made you laugh.",
-    effect: { sanity: 8, humanity: 5 }
-  },
-  {
-    text: "You spill coffee on your shirt right before work.",
-    effect: { sanity: -8, hope: -3 }
-  },
-  {
-    text: "Someone compliments your work unexpectedly.",
-    effect: { hope: 10, humanity: 3 }
-  },
-  {
-    text: "You realize you forgot to respond to an important email.",
-    effect: { sanity: -10, hope: -5 }
-  },
-  {
-    text: "You have a genuinely nice conversation with a coworker.",
-    effect: { humanity: 8, sanity: 5 }
-  },
-  {
-    text: "Your boss nitpicks something trivial you did.",
-    effect: { sanity: -12, hope: -7 }
-  },
-  {
-    text: "You find $20 in an old jacket pocket.",
-    effect: { hope: 8, sanity: 6 }
-  },
-  {
-    text: "You're stuck in traffic and late for something important.",
-    effect: { sanity: -15, health: -5 }
-  },
-  {
-    text: "You make someone smile with a kind gesture.",
-    effect: { humanity: 10, hope: 7 }
-  },
-  {
-    text: "Your alarm didn't go off and you overslept.",
-    effect: { health: -8, hope: -10 }
-  },
-  {
-    text: "You remember something embarrassing you did years ago.",
-    effect: { sanity: -7, hope: -4 }
-  },
-  {
-    text: "A loved one tells you they're proud of you.",
-    effect: { hope: 12, sanity: 10, humanity: 8 }
-  },
-  {
-    text: "You receive an unexpected bill in the mail.",
-    effect: { hope: -10, health: -6 }
-  },
-  {
-    text: "You finally finish a task you've been procrastinating on.",
-    effect: { hope: 9, sanity: 7 }
-  },
-  {
-    text: "You catch yourself in the mirror and don't recognize yourself.",
-    effect: { sanity: -12, humanity: -8 }
-  },
-  {
-    text: "A stranger holds the door for you.",
-    effect: { humanity: 5, hope: 3 }
-  },
-  {
-    text: "You eat something delicious and savor every bite.",
-    effect: { health: 7, sanity: 6 }
-  },
-  {
-    text: "Your anxiety spirals about something you can't control.",
-    effect: { sanity: -15, hope: -8 }
-  },
-  {
-    text: "You have a moment of pure clarity about what matters.",
-    effect: { hope: 10, humanity: 10 }
-  }
+// Core 5 repeatable situations (can appear multiple times in a game)
+const CORE_SITUATIONS = [
+  "You get a notification that you have a meeting in 5 minutes.",
+  "Your friend texts you a meme that actually made you laugh.",
+  "You spill coffee on your shirt right before work.",
+  "Someone compliments your work unexpectedly.",
+  "You realize you forgot to respond to an important email."
 ];
 
-const EVENTS: EventScene[] = [
-  {
-    text: "You made it through another day.",
-    effect: { health: 5, sanity: 3 }
-  },
-  {
-    text: "The weight of existence feels heavier than usual.",
-    effect: { sanity: -10, hope: -8 }
-  },
-  {
-    text: "You feel more human today than yesterday.",
-    effect: { humanity: 12, sanity: 8 }
-  },
-  {
-    text: "Everything feels pointless.",
-    effect: { hope: -15, sanity: -10 }
-  },
-  {
-    text: "You had moments of genuine connection.",
-    effect: { humanity: 10, hope: 8 }
-  },
-  {
-    text: "Fatigue is setting in.",
-    effect: { health: -10, sanity: -5 }
-  }
+// Situation templates for random generation
+const SITUATION_TEMPLATES = [
+  "Your boss nitpicks something trivial you did.",
+  "You find money in an old jacket pocket.",
+  "You're stuck in traffic and late for something important.",
+  "You make someone smile with a kind gesture.",
+  "Your alarm didn't go off and you overslept.",
+  "You remember something embarrassing you did years ago.",
+  "A loved one tells you they're proud of you.",
+  "You receive an unexpected bill in the mail.",
+  "You finally finish a task you've been procrastinating on.",
+  "You catch yourself in the mirror and don't recognize yourself.",
+  "A stranger holds the door for you.",
+  "You eat something delicious and savor every bite.",
+  "Your anxiety spirals about something you can't control.",
+  "You have a moment of pure clarity about what matters.",
+  "Someone took credit for your work.",
+  "You laughed until your sides hurt.",
+  "The weight of your responsibilities feels crushing.",
+  "You helped someone without being asked.",
+  "You made a silly mistake that everyone witnessed.",
+  "You felt genuinely safe and at peace.",
+  "Your body aches from stress.",
+  "You had a conversation that changed your perspective.",
+  "You failed at something you really wanted to succeed at.",
+  "You received unexpected kindness from a stranger.",
+  "You wasted the entire evening and feel guilty.",
+  "You stood up for yourself for once.",
+  "You felt completely invisible.",
+  "You made someone laugh until they cried.",
+  "You couldn't afford something you really needed.",
+  "You reconnected with an old friend."
+];
+
+// Function to generate random stat changes
+const generateRandomStatChange = (): StatChange => {
+  const stats: (keyof Stats)[] = ["health", "sanity", "hope", "humanity"];
+  const change: StatChange = {};
+  
+  // Generate 1-3 stat changes
+  const numChanges = Math.floor(Math.random() * 3) + 1;
+  const selectedStats = stats.sort(() => Math.random() - 0.5).slice(0, numChanges);
+  
+  selectedStats.forEach(stat => {
+    const intensity = Math.floor(Math.random() * 20) + 5; // 5-25
+    const isPositive = Math.random() > 0.4; // 60% chance positive
+    change[stat] = isPositive ? intensity : -intensity;
+  });
+  
+  return change;
+};
+
+// Function to generate today's game situations
+const generateGameSituations = (): Situation[] => {
+  const situations: Situation[] = [];
+  
+  // Add 5 core situations with random stat changes
+  const coreIndexes = CORE_SITUATIONS.map((text, idx) => idx)
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 5);
+  
+  coreIndexes.forEach(idx => {
+    situations.push({
+      text: CORE_SITUATIONS[idx],
+      effect: generateRandomStatChange()
+    });
+  });
+  
+  // Add 15 random generated situations
+  const templateIndexes = SITUATION_TEMPLATES.map((_, idx) => idx)
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 15);
+  
+  templateIndexes.forEach(idx => {
+    situations.push({
+      text: SITUATION_TEMPLATES[idx],
+      effect: generateRandomStatChange()
+    });
+  });
+  
+  // Shuffle all 20 together
+  return situations.sort(() => Math.random() - 0.5);
+};
+
+const ROUND_EVENTS = [
+  "You made it through another day.",
+  "The weight of existence feels heavier than usual.",
+  "You feel more human today than yesterday.",
+  "Everything feels pointless.",
+  "You had moments of genuine connection.",
+  "Fatigue is setting in."
 ];
 
 export default function Game() {
@@ -156,6 +143,8 @@ export default function Game() {
   const [message, setMessage] = useState("Initializing LIFE.EXE...");
   const [statChanges, setStatChanges] = useState<StatChange | null>(null);
   const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [gameSituations, setGameSituations] = useState<Situation[]>([]);
+  const [usedIndices, setUsedIndices] = useState<Set<number>>(new Set());
   const { toast } = useToast();
 
   const lastClickTimeRef = useRef<number>(0);
@@ -164,6 +153,9 @@ export default function Game() {
   const NORMAL_CLICK_INTERVAL = 400;
 
   const startGame = () => {
+    const situations = generateGameSituations();
+    setGameSituations(situations);
+    setUsedIndices(new Set());
     setGameState("PLAYING");
     setStats(INITIAL_STATS);
     setTurn(0);
@@ -171,6 +163,22 @@ export default function Game() {
     setMessage("Click to navigate through life.");
     setStatChanges(null);
     lastClickTimeRef.current = Date.now();
+  };
+
+  const getNextSituation = (): Situation => {
+    // Find a situation that hasn't been used yet
+    let idx = Math.floor(Math.random() * gameSituations.length);
+    let attempts = 0;
+    
+    while (usedIndices.has(idx) && attempts < gameSituations.length) {
+      idx = Math.floor(Math.random() * gameSituations.length);
+      attempts++;
+    }
+    
+    // Mark as used
+    setUsedIndices(prev => new Set([...Array.from(prev), idx]));
+    
+    return gameSituations[idx];
   };
 
   const handleSurviveClick = () => {
@@ -191,8 +199,8 @@ export default function Game() {
     const newClicks = clicks + 1;
     setClicks(newClicks);
 
-    // Show a random situation
-    const situation = SITUATIONS[Math.floor(Math.random() * SITUATIONS.length)];
+    // Get next unused situation
+    const situation = getNextSituation();
     setMessage(situation.text);
     setStatChanges(situation.effect);
 
@@ -247,18 +255,20 @@ export default function Game() {
       setMessage("You survived all 10 rounds of life.");
     } else {
       // Show end-of-round event
-      const event = EVENTS[Math.floor(Math.random() * EVENTS.length)];
-      setMessage(event.text);
-      setStatChanges(event.effect);
+      const eventText = ROUND_EVENTS[Math.floor(Math.random() * ROUND_EVENTS.length)];
+      const eventEffect = generateRandomStatChange();
+      
+      setMessage(eventText);
+      setStatChanges(eventEffect);
 
       // Apply event effects
       setStats(prev => {
         const newStats = { ...prev };
 
-        if (event.effect.hope) newStats.hope += event.effect.hope;
-        if (event.effect.sanity) newStats.sanity += event.effect.sanity;
-        if (event.effect.health) newStats.health += event.effect.health;
-        if (event.effect.humanity) newStats.humanity += event.effect.humanity;
+        if (eventEffect.hope) newStats.hope += eventEffect.hope;
+        if (eventEffect.sanity) newStats.sanity += eventEffect.sanity;
+        if (eventEffect.health) newStats.health += eventEffect.health;
+        if (eventEffect.humanity) newStats.humanity += eventEffect.humanity;
 
         // Clamp values
         (Object.keys(newStats) as (keyof Stats)[]).forEach(key => {
