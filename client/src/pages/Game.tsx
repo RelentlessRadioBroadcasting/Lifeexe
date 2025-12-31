@@ -86,13 +86,13 @@ const generateRandomStatChange = (): StatChange => {
   const selectedStats = stats.sort(() => Math.random() - 0.5).slice(0, numChanges);
   
   selectedStats.forEach(stat => {
-    const isPositive = Math.random() > 0.25; // 75% chance positive
+    const isPositive = Math.random() > 0.4; // 60% chance positive
     if (isPositive) {
-      // Positive: 3-8 points
-      change[stat] = Math.floor(Math.random() * 6) + 3;
+      // Positive: 2-7 points
+      change[stat] = Math.floor(Math.random() * 6) + 2;
     } else {
-      // Negative: -2 to -8 points
-      change[stat] = -(Math.floor(Math.random() * 7) + 2);
+      // Negative: -4 to -10 points
+      change[stat] = -(Math.floor(Math.random() * 7) + 4);
     }
   });
   
@@ -235,7 +235,7 @@ export default function Game() {
       if (situation.effect.health) newStats.health += situation.effect.health;
       if (situation.effect.financial) newStats.financial += situation.effect.financial;
 
-      // Clamp values
+      // Clamp values with 100 point ceiling
       (Object.keys(newStats) as (keyof Stats)[]).forEach(key => {
         newStats[key] = Math.max(0, Math.min(100, newStats[key]));
       });
@@ -292,7 +292,7 @@ export default function Game() {
         if (eventEffect.health) newStats.health += eventEffect.health;
         if (eventEffect.financial) newStats.financial += eventEffect.financial;
 
-        // Clamp values
+        // Clamp values with 100 point ceiling
         (Object.keys(newStats) as (keyof Stats)[]).forEach(key => {
           newStats[key] = Math.max(0, Math.min(100, newStats[key]));
         });
