@@ -349,10 +349,7 @@ export default function Game() {
   };
 
   return (
-    <div className={cn(
-      "min-h-screen font-mono p-4 flex flex-col items-center justify-center relative overflow-hidden select-none transition-colors duration-1000",
-      gameState === "INTRO" ? "bg-black text-foreground" : "bg-white text-black"
-    )}>
+    <div className="min-h-screen font-mono p-4 flex flex-col items-center justify-center relative overflow-hidden select-none bg-white text-black">
       {/* CRT Effects */}
       <div className="crt-overlay absolute inset-0 z-50 pointer-events-none opacity-20" />
       <div className="scanline absolute inset-0 z-50 pointer-events-none opacity-10" />
@@ -497,10 +494,7 @@ export default function Game() {
         </div>
 
         {/* Footer */}
-        <div className={cn(
-          "text-center text-xs",
-          gameState === "INTRO" ? "text-muted-foreground/60" : "text-black/60"
-        )}>
+        <div className="text-center text-xs text-muted-foreground/60">
           © 2025 LIFE SIMULATION CORP
         </div>
       </div>
