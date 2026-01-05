@@ -129,4 +129,9 @@
       letter-spacing: 2px;
     }
   }
+
+  .pixelated {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
 }
