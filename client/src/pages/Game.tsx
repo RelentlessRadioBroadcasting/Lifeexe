@@ -154,6 +154,7 @@ export default function Game() {
   const [usedIndices, setUsedIndices] = useState<Set<number>>(new Set());
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [isCLIClient, setIsCLIClient] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     // Check for CLI-like user agents or specific headers if possible, 
