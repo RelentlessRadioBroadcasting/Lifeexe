@@ -378,14 +378,7 @@ export default function Game() {
         {/* Header */}
         {gameState !== "INTRO" && (
           <div className="text-center space-y-2">
-            <div className="flex items-center justify-center gap-3">
-              <img 
-                src="/thumbnail.png" 
-                alt="LIFE.EXE" 
-                className="w-12 h-12 pixelated"
-              />
-              <h1 className="text-4xl font-bold tracking-tighter animate-pulse">LIFE.EXE</h1>
-            </div>
+            <h1 className="text-4xl font-bold tracking-tighter animate-pulse">LIFE.EXE</h1>
             {gameState === "PLAYING" && (
               <div className="text-sm text-green-700">
                 ROUND {turn}/{MAX_TURNS}
