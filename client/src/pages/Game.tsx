@@ -202,16 +202,34 @@ export default function Game() {
   const [usedIndices, setUsedIndices] = useState<Set<number>>(new Set());
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [isCLIClient, setIsCLIClient] = useState(false);
+  const [isHiddenDomain, setIsHiddenDomain] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
-    // Check for CLI-like user agents or specific headers if possible, 
-    // but usually we check for common indicators or just specific query params/headers
+    // Check for CLI-like user agents or specific headers
     const ua = navigator.userAgent.toLowerCase();
     if (ua.includes('curl') || ua.includes('wget') || window.location.search.includes('client=cli')) {
       setIsCLIClient(true);
     }
+    
+    // Hide game on NeverSayLife.replit.app unless CLI client
+    const hostname = window.location.hostname.toLowerCase();
+    if (hostname === 'neversaylife.replit.app' && !ua.includes('curl') && !ua.includes('wget') && !window.location.search.includes('client=cli')) {
+      setIsHiddenDomain(true);
+    }
   }, []);
+
+  // If on hidden domain (NeverSayLife.replit.app) and not CLI, show nothing
+  if (isHiddenDomain) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-center text-muted-foreground font-mono">
+          <p className="text-xl">ACCESS DENIED</p>
+          <p className="text-sm mt-2">CLI access required</p>
+        </div>
+      </div>
+    );
+  }
 
   // Auto-transition from intro to start after animation
   useEffect(() => {
