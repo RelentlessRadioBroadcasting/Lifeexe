@@ -88,11 +88,11 @@ const generateRandomStatChange = (): StatChange => {
   selectedStats.forEach(stat => {
     const isPositive = Math.random() > 0.4; // 60% chance positive
     if (isPositive) {
-      // Positive: 2-7 points
-      change[stat] = Math.floor(Math.random() * 6) + 2;
+      // Negative: -2 to -7 points (Inverted)
+      change[stat] = -(Math.floor(Math.random() * 6) + 2);
     } else {
-      // Negative: -4 to -10 points
-      change[stat] = -(Math.floor(Math.random() * 7) + 4);
+      // Positive: 4 to 10 points (Inverted)
+      change[stat] = (Math.floor(Math.random() * 7) + 4);
     }
   });
   
@@ -257,10 +257,10 @@ export default function Game() {
       let died = false;
       let deathReason = "";
 
-      if (newStats.health <= 0) { died = true; deathReason = "HEART STOPPED"; }
-      else if (newStats.sanity <= 0) { died = true; deathReason = "MIND FRACTURED"; }
-      else if (newStats.hope <= 0) { died = true; deathReason = "LOST ALL HOPE"; }
-      else if (newStats.financial <= 0) { died = true; deathReason = "BANKRUPT"; }
+      if (newStats.health >= 100) { died = true; deathReason = "OVERDOSED ON LIFE"; }
+      else if (newStats.sanity >= 100) { died = true; deathReason = "TRANSCENDED REALITY"; }
+      else if (newStats.hope >= 100) { died = true; deathReason = "BLINDED BY OPTIMISM"; }
+      else if (newStats.financial >= 100) { died = true; deathReason = "CORRUPTED BY WEALTH"; }
 
       if (died) {
         setGameState("GAME_OVER");
@@ -314,10 +314,10 @@ export default function Game() {
         let died = false;
         let deathReason = "";
 
-        if (newStats.health <= 0) { died = true; deathReason = "HEART STOPPED"; }
-        else if (newStats.sanity <= 0) { died = true; deathReason = "MIND FRACTURED"; }
-        else if (newStats.hope <= 0) { died = true; deathReason = "LOST ALL HOPE"; }
-        else if (newStats.financial <= 0) { died = true; deathReason = "BANKRUPT"; }
+        if (newStats.health >= 100) { died = true; deathReason = "OVERDOSED ON LIFE"; }
+        else if (newStats.sanity >= 100) { died = true; deathReason = "TRANSCENDED REALITY"; }
+        else if (newStats.hope >= 100) { died = true; deathReason = "BLINDED BY OPTIMISM"; }
+        else if (newStats.financial >= 100) { died = true; deathReason = "CORRUPTED BY WEALTH"; }
 
         if (died) {
           setGameState("GAME_OVER");
@@ -337,12 +337,12 @@ export default function Game() {
 
   const handlePaymentSuccess = () => {
     setStats(prev => {
-      const newStats = { ...prev, financial: Math.min(100, prev.financial + 50) };
+      const newStats = { ...prev, financial: Math.max(0, prev.financial - 50) };
       return newStats;
     });
     toast({
-      title: "Funds Added",
-      description: "Financial stability has been temporarily restored.",
+      title: "Funds Removed",
+      description: "Financial stability has been temporarily endangered.",
     });
   };
 
@@ -549,7 +549,7 @@ function StatDisplay({ icon: Icon, label, value, onAdd }: { icon: any, label: st
             )}
           </div>
         </div>
-        <Progress value={value} className="h-1.5 bg-muted" indicatorClassName={value < 20 ? "bg-red-500" : "bg-foreground"} />
+        <Progress value={value} className="h-1.5 bg-muted" indicatorClassName={value > 80 ? "bg-red-500" : "bg-foreground"} />
       </div>
     </div>
   );
