@@ -47,77 +47,83 @@ type SituationData = {
 };
 
 // Micro-moments of joy (research shows frequency > intensity for wellbeing)
+// INVERTED: positive experiences now INCREASE stats (bad in inverted scoring)
 const MICRO_JOY_SITUATIONS: SituationData[] = [
-  { text: "Your friend texts you a meme that actually made you laugh.", effect: { hope: -3, sanity: -2 }, category: "micro_joy" },
-  { text: "Someone compliments your work unexpectedly.", effect: { hope: -4, sanity: -3 }, category: "micro_joy" },
-  { text: "A stranger holds the door for you.", effect: { hope: -2 }, category: "micro_joy" },
-  { text: "You eat something delicious and savor every bite.", effect: { health: -2, hope: -2 }, category: "micro_joy" },
-  { text: "A loved one tells you they're proud of you.", effect: { hope: -5, sanity: -4 }, category: "micro_joy" },
-  { text: "You made someone smile with a kind gesture.", effect: { hope: -3, sanity: -2 }, category: "micro_joy" },
-  { text: "You laughed until your sides hurt.", effect: { health: -2, sanity: -4, hope: -3 }, category: "micro_joy" },
-  { text: "You received unexpected kindness from a stranger.", effect: { hope: -4, sanity: -2 }, category: "micro_joy" },
-  { text: "You made someone laugh until they cried.", effect: { hope: -3, sanity: -3 }, category: "micro_joy" },
-  { text: "You reconnected with an old friend.", effect: { hope: -5, sanity: -3 }, category: "micro_joy" },
-  { text: "You felt genuinely safe and at peace.", effect: { health: -3, sanity: -4, hope: -3 }, category: "micro_joy" },
-  { text: "You finally finish a task you've been procrastinating on.", effect: { sanity: -4, hope: -3 }, category: "micro_joy" },
-  { text: "You have a moment of pure clarity about what matters.", effect: { sanity: -5, hope: -4 }, category: "micro_joy" },
-  { text: "You helped someone without being asked.", effect: { hope: -3, sanity: -2 }, category: "micro_joy" },
-  { text: "You stood up for yourself for once.", effect: { sanity: -4, hope: -3 }, category: "micro_joy" },
+  { text: "Your friend texts you a meme that actually made you laugh.", effect: { hope: 3, sanity: 2 }, category: "micro_joy" },
+  { text: "Someone compliments your work unexpectedly.", effect: { hope: 4, sanity: 3 }, category: "micro_joy" },
+  { text: "A stranger holds the door for you.", effect: { hope: 2 }, category: "micro_joy" },
+  { text: "You eat something delicious and savor every bite.", effect: { health: 2, hope: 2 }, category: "micro_joy" },
+  { text: "A loved one tells you they're proud of you.", effect: { hope: 5, sanity: 4 }, category: "micro_joy" },
+  { text: "You made someone smile with a kind gesture.", effect: { hope: 3, sanity: 2 }, category: "micro_joy" },
+  { text: "You laughed until your sides hurt.", effect: { health: 2, sanity: 4, hope: 3 }, category: "micro_joy" },
+  { text: "You received unexpected kindness from a stranger.", effect: { hope: 4, sanity: 2 }, category: "micro_joy" },
+  { text: "You made someone laugh until they cried.", effect: { hope: 3, sanity: 3 }, category: "micro_joy" },
+  { text: "You reconnected with an old friend.", effect: { hope: 5, sanity: 3 }, category: "micro_joy" },
+  { text: "You felt genuinely safe and at peace.", effect: { health: 3, sanity: 4, hope: 3 }, category: "micro_joy" },
+  { text: "You finally finish a task you've been procrastinating on.", effect: { sanity: 4, hope: 3 }, category: "micro_joy" },
+  { text: "You have a moment of pure clarity about what matters.", effect: { sanity: 5, hope: 4 }, category: "micro_joy" },
+  { text: "You helped someone without being asked.", effect: { hope: 3, sanity: 2 }, category: "micro_joy" },
+  { text: "You stood up for yourself for once.", effect: { sanity: 4, hope: 3 }, category: "micro_joy" },
 ];
 
 // Minor daily stressors (CBT: activating events that trigger cognitive distortions)
+// INVERTED: negative experiences now DECREASE stats (good in inverted scoring)
 const MINOR_STRESS_SITUATIONS: SituationData[] = [
-  { text: "You get a notification that you have a meeting in 5 minutes.", effect: { sanity: 3, health: 2 }, category: "minor_stress" },
-  { text: "You spill coffee on your shirt right before work.", effect: { sanity: 4, hope: 2 }, category: "minor_stress" },
-  { text: "You realize you forgot to respond to an important email.", effect: { sanity: 5, hope: 3 }, category: "minor_stress" },
-  { text: "Your boss nitpicks something trivial you did.", effect: { sanity: 5, hope: 4 }, category: "minor_stress" },
-  { text: "Your alarm didn't go off and you overslept.", effect: { sanity: 4, health: 3 }, category: "minor_stress" },
-  { text: "You remember something embarrassing you did years ago.", effect: { sanity: 6, hope: 2 }, category: "minor_stress" },
-  { text: "You're stuck in traffic and late for something important.", effect: { sanity: 5, hope: 3 }, category: "minor_stress" },
-  { text: "You made a silly mistake that everyone witnessed.", effect: { sanity: 6, hope: 4 }, category: "minor_stress" },
-  { text: "Your body aches from stress.", effect: { health: 5, sanity: 3 }, category: "minor_stress" },
-  { text: "You wasted the entire evening and feel guilty.", effect: { sanity: 4, hope: 5 }, category: "minor_stress" },
-  { text: "Someone took credit for your work.", effect: { sanity: 6, hope: 5 }, category: "minor_stress" },
-  { text: "You catch yourself in the mirror and don't recognize yourself.", effect: { sanity: 5, hope: 4 }, category: "minor_stress" },
-  { text: "You felt completely invisible.", effect: { hope: 6, sanity: 4 }, category: "minor_stress" },
+  { text: "You get a notification that you have a meeting in 5 minutes.", effect: { sanity: -3, health: -2 }, category: "minor_stress" },
+  { text: "You spill coffee on your shirt right before work.", effect: { sanity: -4, hope: -2 }, category: "minor_stress" },
+  { text: "You realize you forgot to respond to an important email.", effect: { sanity: -5, hope: -3 }, category: "minor_stress" },
+  { text: "Your boss nitpicks something trivial you did.", effect: { sanity: -5, hope: -4 }, category: "minor_stress" },
+  { text: "Your alarm didn't go off and you overslept.", effect: { sanity: -4, health: -3 }, category: "minor_stress" },
+  { text: "You remember something embarrassing you did years ago.", effect: { sanity: -6, hope: -2 }, category: "minor_stress" },
+  { text: "You're stuck in traffic and late for something important.", effect: { sanity: -5, hope: -3 }, category: "minor_stress" },
+  { text: "You made a silly mistake that everyone witnessed.", effect: { sanity: -6, hope: -4 }, category: "minor_stress" },
+  { text: "Your body aches from stress.", effect: { health: -5, sanity: -3 }, category: "minor_stress" },
+  { text: "You wasted the entire evening and feel guilty.", effect: { sanity: -4, hope: -5 }, category: "minor_stress" },
+  { text: "Someone took credit for your work.", effect: { sanity: -6, hope: -5 }, category: "minor_stress" },
+  { text: "You catch yourself in the mirror and don't recognize yourself.", effect: { sanity: -5, hope: -4 }, category: "minor_stress" },
+  { text: "You felt completely invisible.", effect: { hope: -6, sanity: -4 }, category: "minor_stress" },
 ];
 
 // Financial stressors (research: economic pressures are primary mental health contributors)
+// INVERTED: positive financial = increase stats, negative financial = decrease stats
 const FINANCIAL_SITUATIONS: SituationData[] = [
-  { text: "You find money in an old jacket pocket.", effect: { financial: -4, hope: -2 }, category: "financial" },
-  { text: "You receive an unexpected bill in the mail.", effect: { financial: 8, sanity: 5, hope: 4 }, category: "financial" },
-  { text: "You couldn't afford something you really needed.", effect: { financial: 6, hope: 7, sanity: 4 }, category: "financial" },
-  { text: "Your paycheck was less than expected.", effect: { financial: 7, hope: 5 }, category: "financial" },
-  { text: "An investment unexpectedly paid off.", effect: { financial: -6, hope: -3 }, category: "financial" },
-  { text: "Your rent is increasing next month.", effect: { financial: 9, hope: 6, sanity: 5 }, category: "financial" },
+  { text: "You find money in an old jacket pocket.", effect: { financial: 4, hope: 2 }, category: "financial" },
+  { text: "You receive an unexpected bill in the mail.", effect: { financial: -8, sanity: -5, hope: -4 }, category: "financial" },
+  { text: "You couldn't afford something you really needed.", effect: { financial: -6, hope: -7, sanity: -4 }, category: "financial" },
+  { text: "Your paycheck was less than expected.", effect: { financial: -7, hope: -5 }, category: "financial" },
+  { text: "An investment unexpectedly paid off.", effect: { financial: 6, hope: 3 }, category: "financial" },
+  { text: "Your rent is increasing next month.", effect: { financial: -9, hope: -6, sanity: -5 }, category: "financial" },
 ];
 
 // Health-related (research: illness/injury → sleep problems, stress response)
+// INVERTED: positive health = increase stats, negative health = decrease stats
 const HEALTH_SITUATIONS: SituationData[] = [
-  { text: "You slept poorly and feel exhausted.", effect: { health: 5, sanity: 4, hope: 3 }, category: "health" },
-  { text: "You exercised and feel energized.", effect: { health: -4, sanity: -3, hope: -2 }, category: "health" },
-  { text: "A persistent pain flares up again.", effect: { health: 7, sanity: 5, hope: 4 }, category: "health" },
-  { text: "You received good news from a doctor.", effect: { health: -5, hope: -6, sanity: -3 }, category: "health" },
-  { text: "Your anxiety spirals about something you can't control.", effect: { sanity: 8, health: 4, hope: 5 }, category: "health" },
+  { text: "You slept poorly and feel exhausted.", effect: { health: -5, sanity: -4, hope: -3 }, category: "health" },
+  { text: "You exercised and feel energized.", effect: { health: 4, sanity: 3, hope: 2 }, category: "health" },
+  { text: "A persistent pain flares up again.", effect: { health: -7, sanity: -5, hope: -4 }, category: "health" },
+  { text: "You received good news from a doctor.", effect: { health: 5, hope: 6, sanity: 3 }, category: "health" },
+  { text: "Your anxiety spirals about something you can't control.", effect: { sanity: -8, health: -4, hope: -5 }, category: "health" },
 ];
 
 // Existential/meaning-related (research: degradation/humiliation → depressive symptoms)
+// INVERTED: positive meaning = increase stats, negative meaning = decrease stats
 const EXISTENTIAL_SITUATIONS: SituationData[] = [
-  { text: "The weight of your responsibilities feels crushing.", effect: { sanity: 8, hope: 7, health: 4 }, category: "existential" },
-  { text: "Everything feels pointless today.", effect: { hope: 9, sanity: 6 }, category: "existential" },
-  { text: "You failed at something you really wanted to succeed at.", effect: { hope: 8, sanity: 6 }, category: "existential" },
-  { text: "You had a conversation that changed your perspective.", effect: { sanity: -5, hope: -4 }, category: "existential" },
-  { text: "You question if any of this matters.", effect: { hope: 7, sanity: 5 }, category: "existential" },
-  { text: "You realized you've been living on autopilot.", effect: { sanity: 6, hope: 5 }, category: "existential" },
+  { text: "The weight of your responsibilities feels crushing.", effect: { sanity: -8, hope: -7, health: -4 }, category: "existential" },
+  { text: "Everything feels pointless today.", effect: { hope: -9, sanity: -6 }, category: "existential" },
+  { text: "You failed at something you really wanted to succeed at.", effect: { hope: -8, sanity: -6 }, category: "existential" },
+  { text: "You had a conversation that changed your perspective.", effect: { sanity: 5, hope: 4 }, category: "existential" },
+  { text: "You question if any of this matters.", effect: { hope: -7, sanity: -5 }, category: "existential" },
+  { text: "You realized you've been living on autopilot.", effect: { sanity: -6, hope: -5 }, category: "existential" },
 ];
 
 // Social situations (research: social support mediates stress → mental health)
+// INVERTED: positive social = increase stats, negative social = decrease stats
 const SOCIAL_SITUATIONS: SituationData[] = [
-  { text: "You felt deeply understood by someone.", effect: { hope: -5, sanity: -4 }, category: "social" },
-  { text: "A relationship feels strained and distant.", effect: { hope: 6, sanity: 5 }, category: "social" },
-  { text: "You had genuine connection with someone new.", effect: { hope: -4, sanity: -3 }, category: "social" },
-  { text: "Someone you trusted let you down.", effect: { hope: 7, sanity: 6 }, category: "social" },
-  { text: "You felt part of something bigger than yourself.", effect: { hope: -6, sanity: -4 }, category: "social" },
+  { text: "You felt deeply understood by someone.", effect: { hope: 5, sanity: 4 }, category: "social" },
+  { text: "A relationship feels strained and distant.", effect: { hope: -6, sanity: -5 }, category: "social" },
+  { text: "You had genuine connection with someone new.", effect: { hope: 4, sanity: 3 }, category: "social" },
+  { text: "Someone you trusted let you down.", effect: { hope: -7, sanity: -6 }, category: "social" },
+  { text: "You felt part of something bigger than yourself.", effect: { hope: 6, sanity: 4 }, category: "social" },
 ];
 
 // Combine all situations
@@ -168,17 +174,18 @@ const generateRandomStatChange = (): StatChange => {
 
 // Round-end events with scientifically-calibrated effects
 // Based on research: end-of-day reflections impact next-day wellbeing
+// INVERTED: positive = increase stats, negative = decrease stats
 const ROUND_EVENTS: { text: string; effect: StatChange }[] = [
-  { text: "You made it through another day.", effect: { hope: -2, sanity: -1 } },
-  { text: "The weight of existence feels heavier than usual.", effect: { sanity: 4, hope: 5 } },
-  { text: "You feel more human today than yesterday.", effect: { hope: -3, sanity: -2, health: -1 } },
-  { text: "Everything feels pointless.", effect: { hope: 6, sanity: 5 } },
-  { text: "You had moments of genuine connection.", effect: { hope: -4, sanity: -3 } },
-  { text: "Fatigue is setting in.", effect: { health: 5, sanity: 3 } },
-  { text: "You practiced gratitude before sleep.", effect: { hope: -4, sanity: -3, health: -2 } },
-  { text: "Your mind raced with anxious thoughts all night.", effect: { sanity: 6, health: 4, hope: 3 } },
-  { text: "You connected deeply with nature today.", effect: { health: -3, sanity: -4, hope: -3 } },
-  { text: "Social media left you feeling inadequate.", effect: { hope: 5, sanity: 4 } },
+  { text: "You made it through another day.", effect: { hope: 2, sanity: 1 } },
+  { text: "The weight of existence feels heavier than usual.", effect: { sanity: -4, hope: -5 } },
+  { text: "You feel more human today than yesterday.", effect: { hope: 3, sanity: 2, health: 1 } },
+  { text: "Everything feels pointless.", effect: { hope: -6, sanity: -5 } },
+  { text: "You had moments of genuine connection.", effect: { hope: 4, sanity: 3 } },
+  { text: "Fatigue is setting in.", effect: { health: -5, sanity: -3 } },
+  { text: "You practiced gratitude before sleep.", effect: { hope: 4, sanity: 3, health: 2 } },
+  { text: "Your mind raced with anxious thoughts all night.", effect: { sanity: -6, health: -4, hope: -3 } },
+  { text: "You connected deeply with nature today.", effect: { health: 3, sanity: 4, hope: 3 } },
+  { text: "Social media left you feeling inadequate.", effect: { hope: -5, sanity: -4 } },
 ];
 
 import { PaymentModal } from "@/components/payment-modal";
@@ -294,14 +301,14 @@ export default function Game() {
         newStats[key] = Math.max(0, Math.min(100, newStats[key]));
       });
 
-      // Check death conditions immediately
+      // Check death conditions (die when stats hit 0)
       let died = false;
       let deathReason = "";
 
-      if (newStats.health >= 100) { died = true; deathReason = "OVERDOSED ON LIFE"; }
-      else if (newStats.sanity >= 100) { died = true; deathReason = "TRANSCENDED REALITY"; }
-      else if (newStats.hope >= 100) { died = true; deathReason = "BLINDED BY OPTIMISM"; }
-      else if (newStats.financial >= 100) { died = true; deathReason = "CORRUPTED BY WEALTH"; }
+      if (newStats.health <= 0) { died = true; deathReason = "HEART STOPPED"; }
+      else if (newStats.sanity <= 0) { died = true; deathReason = "MIND FRACTURED"; }
+      else if (newStats.hope <= 0) { died = true; deathReason = "LOST ALL HOPE"; }
+      else if (newStats.financial <= 0) { died = true; deathReason = "BANKRUPT"; }
 
       if (died) {
         setGameState("GAME_OVER");
@@ -350,14 +357,14 @@ export default function Game() {
           newStats[key] = Math.max(0, Math.min(100, newStats[key]));
         });
 
-        // Check death conditions
+        // Check death conditions (die when stats hit 0)
         let died = false;
         let deathReason = "";
 
-        if (newStats.health >= 100) { died = true; deathReason = "OVERDOSED ON LIFE"; }
-        else if (newStats.sanity >= 100) { died = true; deathReason = "TRANSCENDED REALITY"; }
-        else if (newStats.hope >= 100) { died = true; deathReason = "BLINDED BY OPTIMISM"; }
-        else if (newStats.financial >= 100) { died = true; deathReason = "CORRUPTED BY WEALTH"; }
+        if (newStats.health <= 0) { died = true; deathReason = "HEART STOPPED"; }
+        else if (newStats.sanity <= 0) { died = true; deathReason = "MIND FRACTURED"; }
+        else if (newStats.hope <= 0) { died = true; deathReason = "LOST ALL HOPE"; }
+        else if (newStats.financial <= 0) { died = true; deathReason = "BANKRUPT"; }
 
         if (died) {
           setGameState("GAME_OVER");
@@ -377,12 +384,12 @@ export default function Game() {
 
   const handlePaymentSuccess = () => {
     setStats(prev => {
-      const newStats = { ...prev, financial: Math.max(0, prev.financial - 50) };
+      const newStats = { ...prev, financial: Math.min(100, prev.financial + 50) };
       return newStats;
     });
     toast({
-      title: "Funds Removed",
-      description: "Financial stability has been temporarily endangered.",
+      title: "Funds Added",
+      description: "Financial stability has been temporarily restored.",
     });
   };
 
@@ -589,7 +596,7 @@ function StatDisplay({ icon: Icon, label, value, onAdd }: { icon: any, label: st
             )}
           </div>
         </div>
-        <Progress value={value} className="h-1.5 bg-muted" indicatorClassName={value > 80 ? "bg-red-500" : "bg-foreground"} />
+        <Progress value={value} className="h-1.5 bg-muted" indicatorClassName={value < 20 ? "bg-red-500" : "bg-foreground"} />
       </div>
     </div>
   );
