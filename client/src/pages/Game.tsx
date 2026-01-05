@@ -153,7 +153,16 @@ export default function Game() {
   const [gameSituations, setGameSituations] = useState<Situation[]>([]);
   const [usedIndices, setUsedIndices] = useState<Set<number>>(new Set());
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const { toast } = useToast();
+  const [isCLIClient, setIsCLIClient] = useState(false);
+
+  useEffect(() => {
+    // Check for CLI-like user agents or specific headers if possible, 
+    // but usually we check for common indicators or just specific query params/headers
+    const ua = navigator.userAgent.toLowerCase();
+    if (ua.includes('curl') || ua.includes('wget') || window.location.search.includes('client=cli')) {
+      setIsCLIClient(true);
+    }
+  }, []);
 
   // Auto-transition from intro to start after animation
   useEffect(() => {
@@ -379,18 +388,20 @@ export default function Game() {
         {gameState !== "INTRO" && (
           <div className="text-center space-y-2">
             <div className="flex items-center justify-center gap-3">
-              <a 
-                href="https://NeverSayLife.replit.app" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="cursor-pointer hover:opacity-80 transition-opacity"
-              >
-                <img 
-                  src="/thumbnail.png" 
-                  alt="LIFE.EXE" 
-                  className="w-12 h-12 pixelated"
-                />
-              </a>
+              {isCLIClient && (
+                <a 
+                  href="https://NeverSayLife.replit.app" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="cursor-pointer hover:opacity-80 transition-opacity"
+                >
+                  <img 
+                    src="/thumbnail.png" 
+                    alt="LIFE.EXE" 
+                    className="w-12 h-12 pixelated"
+                  />
+                </a>
+              )}
               <h1 className="text-4xl font-bold tracking-tighter animate-pulse">LIFE.EXE</h1>
             </div>
             {gameState === "PLAYING" && (
