@@ -436,7 +436,7 @@ export default function Game() {
         {gameState !== "INTRO" && (
           <div className="text-center space-y-2">
             <div className="flex items-center justify-center gap-3">
-              {(isCLIClient || (typeof window !== 'undefined' && window.location.hostname !== 'neversaylife.replit.app')) && (
+              {(isCLIClient || (typeof window !== 'undefined' && window.location.hostname.toLowerCase() !== 'neversaylife.replit.app')) && (
                 <a 
                   href="https://NeverSayLife.replit.app" 
                   target="_blank" 
